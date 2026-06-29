@@ -102,13 +102,16 @@ To visualize and analyze booking drop-offs in Google Analytics 4, configure a **
 
 Therefore, **the front-end developer must write and trigger the `window.dataLayer.push({...})` block in the website's application code.** GTM simply sits and listens for these pushes.
 
-### Briefing Note for the Front-End Developer Team
+### Front-End Implementation Rules
 
-Dear Team,
+Implement the custom `dataLayer.push` calls at each step transition using the following rules:
 
-We are implementing funnel tracking for the new 3-step booking form. Please integrate the custom dataLayer pushes at each step transition according to these guidelines:
+1.  **Timing**: Execute `window.dataLayer.push` immediately after the transition button click (e.g., "Next", "Proceed", or "Confirm") and only after front-end validation succeeds, but prior to updating the form UI state.
+2.  **PII Restriction**: Do not include actual names, email addresses, or phone numbers in the parameters. For Step 2, send `preferred_date` formatted as `YYYY-MM-DD` and a boolean flag `has_phone: true` once the phone number passes validation.
+3.  **Payload Structure**: Follow the keys and types specified above. The event name must remain `booking_step_complete` for all three steps.
+4.  **Array Check**: Initialize the global array safely before executing the push to prevent exceptions:
+    ```javascript
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ ... });
+    ```
 
-*   **Timing of the Push**: Trigger the `window.dataLayer.push({...})` statement **immediately after the user clicks the transition button** (e.g., "Next" or "Confirm Appointment") and **only after the step's front-end validation passes**, but **before** the UI changes to the next step or shows the confirmation message.
-*   **Privacy & PII Compliance**: Do not push the patient's actual name, email, or phone number to the dataLayer. For Step 2, only push the `preferred_date` formatted as `YYYY-MM-DD` and a boolean `has_phone: true` (which validates that a valid 10-digit Indian phone number was entered).
-*   **Push Structure**: Ensure the push uses the exact parameter keys and values defined in this specification. The event name must be `booking_step_complete` across all steps, using the `step_number` parameter to differentiate them.
-*   **Pre-initialization Safe-guard**: Always initialize the array before pushing: `window.dataLayer = window.dataLayer || [];` to prevent script crashes if GTM hasn't loaded yet.

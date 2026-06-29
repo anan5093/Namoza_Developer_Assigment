@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--
-    Purpose: OrthoNow High-Conversion Landing Page for Knee & Back Pain Campaign
-    Author: Senior Full-Stack & Martech Developer
-    Date: June 2026
-    GTM Note: Triggers 'consultation_form_submitted' custom event to window.dataLayer on form submit.
-  -->
+  <!-- OrthoNow Campaign Landing Page - June 2026 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OrthoNow | Expert Orthopaedic Consultation</title>
@@ -29,10 +24,10 @@
       --color-bg-light: #F4F7F9;
       --color-bg-white: #FFFFFF;
       --color-text-dark: #1F2937;
-      --color-text-muted: #4B5563; /* Darker gray for accessible contrast ratio (> 4.5:1) */
+      --color-text-muted: #4B5563;
       --color-border: #D1D5DB;
-      --color-success: #047857; /* Darker green for accessible contrast ratio (> 4.5:1) */
-      --color-error: #C62828; /* Darker red for accessible contrast ratio (> 4.5:1) */
+      --color-success: #047857;
+      --color-error: #C62828;
       
       --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --border-radius: 12px;
@@ -254,7 +249,7 @@
     }
 
     .form-input::placeholder {
-      color: #556070; /* Stylized placeholder with high contrast for accessibility */
+      color: #556070;
       opacity: 1;
     }
 
@@ -297,7 +292,7 @@
     }
 
     .form-footer-note {
-      font-size: 13px; /* Increased from 11px for better legibility and WCAG compatibility */
+      font-size: 13px;
       color: var(--color-text-muted);
       text-align: center;
       margin-top: 12px;
@@ -628,7 +623,6 @@
 
   </main>
 
-  <!-- Form Logic and GTM Push Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var form = document.getElementById('consultation-form');
@@ -636,11 +630,9 @@
       var phoneInput = document.getElementById('patient_phone');
       var nameError = document.getElementById('name-error');
       var phoneError = document.getElementById('phone-error');
-      
-      var formCard = document.getElementById('form-card-container');
       var thankyouCard = document.getElementById('thankyou-container');
 
-      // Clear custom error outlines on input
+      // Clear error states on user typing
       nameInput.addEventListener('input', function() {
         if (nameInput.value.trim().length >= 2) {
           nameInput.classList.remove('error');
@@ -650,7 +642,6 @@
 
       phoneInput.addEventListener('input', function() {
         var cleanVal = phoneInput.value.replace(/\s+/g, '');
-        // Validate Indian 10 digit regex: starts with 6, 7, 8, 9
         var regex = /^[6-9]\d{9}$/;
         if (regex.test(cleanVal)) {
           phoneInput.classList.remove('error');
@@ -659,7 +650,7 @@
       });
 
       form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Stop native submission
+        event.preventDefault();
 
         var nameVal = nameInput.value.trim();
         var phoneVal = phoneInput.value.replace(/\s+/g, '');
@@ -667,7 +658,6 @@
         var isNameValid = nameVal.length >= 2;
         var isPhoneValid = /^[6-9]\d{9}$/.test(phoneVal);
 
-        // Name Validation
         if (!isNameValid) {
           nameInput.classList.add('error');
           nameError.style.display = 'block';
@@ -676,7 +666,6 @@
           nameError.style.display = 'none';
         }
 
-        // Phone Validation
         if (!isPhoneValid) {
           phoneInput.classList.add('error');
           phoneError.style.display = 'block';
@@ -685,24 +674,18 @@
           phoneError.style.display = 'none';
         }
 
-        // Form Submission Execution
         if (isNameValid && isPhoneValid) {
-          // A. GTM DataLayer Push
-          // Initialize dataLayer safely
+          // Push event to GTM dataLayer (No PII)
           window.dataLayer = window.dataLayer || [];
-          
-          // Execute push containing campaign metadata and lead source
-          // Note: No PII (names/phone numbers) is written to dataLayer to prevent leakage
           window.dataLayer.push({
             event: 'consultation_form_submitted',
             clinic_preference: 'Bengaluru',
             lead_source: 'google_ads_landing_page'
           });
 
-          // Console output verification for ease of debugging/reviewing
-          console.log('%c[GTM dataLayer.push Executed]', 'color: #10B981; font-weight: bold;', window.dataLayer[window.dataLayer.length - 1]);
+          console.log('[GTM dataLayer.push]', window.dataLayer[window.dataLayer.length - 1]);
 
-          // B. UI Update to Thank-You State
+          // Show success state
           form.style.display = 'none';
           document.querySelector('.form-header').style.display = 'none';
           document.querySelector('.form-footer-note').style.display = 'none';

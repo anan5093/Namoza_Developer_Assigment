@@ -53,21 +53,5 @@ To verify that the GTM dataLayer push fires correctly, follows validation, and c
 
 ---
 
-## Submission Checklist
-
-- [x] **Task 01**: GTM Event Schema table created with 6+ interaction types (`task-01-gtm-schema/event-schema.md`).
-- [x] **Task 01**: Google Ads Conversion Action selection and conversion window recommended and justified (`task-01-gtm-schema/event-schema.md`).
-- [x] **Task 01**: 3 separate JSON schemas for booking steps 1, 2, and 3 defined (`task-01-gtm-schema/booking-form-datalayer.md`).
-- [x] **Task 01**: GA4 Funnel Exploration and Bengaluru clinic traffic segmentation explained (`task-01-gtm-schema/booking-form-datalayer.md`).
-- [x] **Task 01**: Front-end developer briefing note for Step 2 dataLayer implementation completed (`task-01-gtm-schema/booking-form-datalayer.md`).
-- [x] **Task 02**: Mobile-first single-file landing page `index.html` built with all 5 required elements (`task-02-landing-page/index.html`).
-- [x] **Task 02**: CSS custom properties used, styled clean and human-copy driven with medical palette (`task-02-landing-page/index.html`).
-- [x] **Task 02**: System font stack, inline SVGs, and 0 external dependencies utilized for speed (`task-02-landing-page/index.html`).
-- [x] **Task 02**: Input validation for 10-digit Indian phone numbers starting with 6-9 (`task-02-landing-page/index.html`).
-- [x] **Task 02**: GTM dataLayer push and inline thank-you state working without reload (`task-02-landing-page/index.html`).
-- [x] **Task 02**: PageSpeed Insights Mobile score screenshot at 90+ captured and saved (`task-02-landing-page/pagespeed-screenshot.png`).
-- [x] **Task 03**: Integration architecture written answer within 300–400 words (`task-03-integration/integration-design.md`).
-- [x] **Task 03**: Direct HubSpot API selected and phone deduplication trap resolved (`task-03-integration/integration-design.md`).
-- [x] **Task 03**: Single biggest failure point and fallback queue mechanism defined (`task-03-integration/integration-design.md`).
-- [x] **Task 03**: 3 WhatsApp 2-minute SLA failure modes and monitoring solutions detailed (`task-03-integration/integration-design.md`).
-- [x] **Task 03**: No forbidden vocabulary used ("seamless", "robust", etc.) and plain verbs used (`task-03-integration/integration-design.md`).
+## License
+This project is proprietary and confidential. Developed for OrthoNow's digital campaign integration.
