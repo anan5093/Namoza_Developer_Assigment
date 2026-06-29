@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    Purpose: OrthoNow High-Conversion Landing Page for Knee & Back Pain Campaign
+    Author: Senior Full-Stack & Martech Developer
+    Date: June 2026
+    GTM Note: Triggers 'consultation_form_submitted' custom event to window.dataLayer on form submit.
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrthoNow | Expert Orthopaedic Consultation</title>
+  
+  <!-- Inline Favicon to prevent console error logs (Best Practices) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Get a personalized orthopaedic recovery plan for your knee or back pain. Book your consultation at one of OrthoNow's 9 clinics in Bengaluru, Hyderabad, and Chennai.">
+  <meta name="robots" content="index, follow">
+  
+  <style>
+    /* === CSS RESET & VARIABLES === */
+    :root {
+      --color-primary: #0F2C59;
+      --color-primary-dark: #0A1E3F;
+      --color-primary-light: #EBF1F6;
+      --color-accent: #C22E1A;
+      --color-accent-hover: #A32311;
+      --color-bg-light: #F4F7F9;
+      --color-bg-white: #FFFFFF;
+      --color-text-dark: #1F2937;
+      --color-text-muted: #4B5563; /* Darker gray for accessible contrast ratio (> 4.5:1) */
+      --color-border: #D1D5DB;
+      --color-success: #047857; /* Darker green for accessible contrast ratio (> 4.5:1) */
+      --color-error: #C62828; /* Darker red for accessible contrast ratio (> 4.5:1) */
+      
+      --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --box-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --transition: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family-system);
+      background-color: var(--color-bg-light);
+      color: var(--color-text-dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* === BASE STYLES & TYPOGRAPHY === */
+    h1, h2, h3 {
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* === LAYOUT & HEADER === */
+    header {
+      background-color: var(--color-bg-white);
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      color: var(--color-accent);
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .header-cta:hover {
+      background-color: var(--color-primary);
+      color: var(--color-bg-white);
+    }
+
+    .main-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 60px 20px;
+    }
+
+    /* === HERO & FORM === */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .hero-content {
+      padding-top: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      color: var(--color-text-muted);
+      margin-bottom: 24px;
+    }
+
+    .bullet-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .bullet-icon {
+      flex-shrink: 0;
+      color: var(--color-success);
+      margin-top: 3px;
+    }
+
+    /* Form Container */
+    .form-card {
+      background-color: var(--color-bg-white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 28px 24px;
+      border: 1px solid var(--color-border);
+      transition: var(--transition);
+    }
+
+    .form-card:hover {
+      box-shadow: var(--box-shadow-hover);
+    }
+
+    .form-header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-title {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: var(--color-text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-dark);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 12px 12px 38px;
+      font-size: 15px;
+      font-family: var(--font-family-system);
+      border: 1.5px solid var(--color-border);
+      border-radius: 8px;
+      background-color: var(--color-bg-light);
+      color: var(--color-text-dark);
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: #556070; /* Stylized placeholder with high contrast for accessibility */
+      opacity: 1;
+    }
+
+    .form-input:focus {
+      border-color: var(--color-primary);
+      background-color: var(--color-bg-white);
+      box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.15);
+    }
+
+    .form-input.error {
+      border-color: var(--color-error);
+      background-color: #FFF5F5;
+    }
+
+    .error-msg {
+      display: none;
+      font-size: 12px;
+      color: var(--color-error);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background-color: var(--color-accent);
+      color: var(--color-bg-white);
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 4px rgba(194, 46, 26, 0.2);
+    }
+
+    .submit-btn:hover {
+      background-color: var(--color-accent-hover);
+      box-shadow: 0 4px 6px rgba(194, 46, 26, 0.3);
+    }
+
+    .form-footer-note {
+      font-size: 13px; /* Increased from 11px for better legibility and WCAG compatibility */
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* === TRUST BLOCK === */
+    .trust-section {
+      margin-top: 48px;
+      padding-top: 36px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .trust-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .trust-title {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .trust-subtitle {
+      font-size: 15px;
+      color: var(--color-text-muted);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .trust-card {
+      background-color: var(--color-bg-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .trust-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--box-shadow);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--color-accent);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+
+    .stat-desc {
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    /* === SUCCESS STATE === */
+    .thankyou-container {
+      display: none;
+      text-align: center;
+      padding: 10px 0;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-icon-wrapper {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(16, 185, 129, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+      color: var(--color-success);
+    }
+
+    .success-title {
+      font-size: 24px;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+    }
+
+    .success-text {
+      font-size: 15px;
+      color: var(--color-text-dark);
+      margin-bottom: 24px;
+    }
+
+    .success-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--color-primary);
+      color: var(--color-bg-white);
+      padding: 12px 24px;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .success-action-btn:hover {
+      background-color: var(--color-primary-dark);
+      box-shadow: 0 4px 6px rgba(15, 44, 89, 0.2);
+    }
+
+    /* === RESPONSIVE DESIGN === */
+    @media (min-width: 768px) {
+      .main-container {
+        padding: 40px 24px 80px 24px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 48px;
+        align-items: center;
+      }
+
+      .hero-title {
+        font-size: 40px;
+        margin-bottom: 20px;
+      }
+
+      .hero-subtitle {
+        font-size: 19px;
+        margin-bottom: 28px;
+      }
+
+      .bullet-item {
+        font-size: 16px;
+      }
+
+      .trust-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .trust-section {
+        margin-top: 64px;
+        padding-top: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo-link" aria-label="OrthoNow Homepage">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary);">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+        </svg>
+        <span class="logo-text">Ortho<span>Now</span></span>
+      </a>
+      <a href="tel:+919876543210" class="header-cta" id="header_call_cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 .9-.27 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.27.9l-2.2 2.2Z"/>
+        </svg>
+        <span>Call Now</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <div class="hero-grid">
+      
+      <!-- Left Column: Copy & Value Proposition -->
+      <section class="hero-content">
+        <span class="badge">Bengaluru's Joint & Spine Experts</span>
+        <h1 class="hero-title">
+          That back pain you've been pushing through? Let's fix it.
+        </h1>
+        <p class="hero-subtitle">
+          Long sitting hours at your desk shouldn't mean living with constant stiffness. Get an expert orthopaedic opinion and a real, recovery-focused plan from Bengaluru's leading team.
+        </p>
+        
+        <ul class="bullet-points">
+          <li class="bullet-item">
+            <svg class="bullet-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Focused on non-surgical recovery & clinical physical therapy first</span>
+          </li>
+          <li class="bullet-item">
+            <svg class="bullet-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Over 15+ years of clinical experience in advanced spine & joint care</span>
+          </li>
+          <li class="bullet-item">
+            <svg class="bullet-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Same-day diagnostic scans & consultations available at our clinics</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Right Column: Conversion Form -->
+      <section class="form-container">
+        
+        <!-- Booking Form -->
+        <div class="form-card" id="form-card-container">
+          <div class="form-header">
+            <h2 class="form-title">Request a Callback</h2>
+            <p class="form-subtitle">Takes 30 seconds. Speak to our clinical advisor.</p>
+          </div>
+          
+          <form id="consultation-form" novalidate>
+            <div class="form-group">
+              <label for="patient_name" class="form-label">Full Name</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="patient_name" 
+                  name="patient_name" 
+                  class="form-input" 
+                  placeholder="e.g., Ananth Rao" 
+                  required
+                >
+              </div>
+              <div class="error-msg" id="name-error">Please enter your name (minimum 2 characters).</div>
+            </div>
+
+            <div class="form-group">
+              <label for="patient_phone" class="form-label">10-Digit Mobile Number</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                  </svg>
+                </span>
+                <input 
+                  type="tel" 
+                  id="patient_phone" 
+                  name="patient_phone" 
+                  class="form-input" 
+                  placeholder="e.g., 98765 43210" 
+                  required
+                >
+              </div>
+              <div class="error-msg" id="phone-error">Please enter a valid 10-digit Indian phone number (starting with 6-9).</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit_form_btn">Request Callback</button>
+          </form>
+          <p class="form-footer-note">🛡️ Your details are private and shared only with our medical staff.</p>
+        </div>
+
+        <!-- Thank-You State -->
+        <div class="form-card thankyou-container" id="thankyou-container">
+          <div class="success-icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h2 class="success-title">Request Confirmed</h2>
+          <p class="success-text">
+            We have received your request. Expect a phone call from an OrthoNow clinical consultant within <strong>2 hours</strong> to discuss your symptoms and finalize your slot.
+          </p>
+          <a href="tel:+919876543210" class="success-action-btn" id="success_call_btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 .9-.27 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.27.9l-2.2 2.2Z"/>
+            </svg>
+            <span>Need Immediate Help? Call Us</span>
+          </a>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- Trust Element: Clinic Count with City Names -->
+    <section class="trust-section">
+      <div class="trust-header">
+        <h2 class="trust-title">Our Clinical Authority</h2>
+        <p class="trust-subtitle">Delivering high-quality orthopaedic diagnostics and recovery across major cities</p>
+      </div>
+      <div class="trust-grid">
+        
+        <!-- Card 1: Network Size -->
+        <div class="trust-card">
+          <div class="stat-number">9</div>
+          <div class="stat-label">Modern Clinics</div>
+          <p class="stat-desc">Providing full physical rehab and diagnostic suites across Bengaluru, Hyderabad, and Chennai.</p>
+        </div>
+        
+        <!-- Card 2: Patients Treated -->
+        <div class="trust-card">
+          <div class="stat-number">4,200+</div>
+          <div class="stat-label">Successful Treatments</div>
+          <p class="stat-desc">Helping working professionals overcome back stiffness, joint pain, and recovery from sports injuries.</p>
+        </div>
+        
+        <!-- Card 3: Satisfaction -->
+        <div class="trust-card">
+          <div class="stat-number">98.4%</div>
+          <div class="stat-label">Patient Satisfaction</div>
+          <p class="stat-desc">Evaluated by clinical post-treatment feedback scoring highly on pain alleviation and movement recovery.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Form Logic and GTM Push Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var form = document.getElementById('consultation-form');
+      var nameInput = document.getElementById('patient_name');
+      var phoneInput = document.getElementById('patient_phone');
+      var nameError = document.getElementById('name-error');
+      var phoneError = document.getElementById('phone-error');
+      
+      var formCard = document.getElementById('form-card-container');
+      var thankyouCard = document.getElementById('thankyou-container');
+
+      // Clear custom error outlines on input
+      nameInput.addEventListener('input', function() {
+        if (nameInput.value.trim().length >= 2) {
+          nameInput.classList.remove('error');
+          nameError.style.display = 'none';
+        }
+      });
+
+      phoneInput.addEventListener('input', function() {
+        var cleanVal = phoneInput.value.replace(/\s+/g, '');
+        // Validate Indian 10 digit regex: starts with 6, 7, 8, 9
+        var regex = /^[6-9]\d{9}$/;
+        if (regex.test(cleanVal)) {
+          phoneInput.classList.remove('error');
+          phoneError.style.display = 'none';
+        }
+      });
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Stop native submission
+
+        var nameVal = nameInput.value.trim();
+        var phoneVal = phoneInput.value.replace(/\s+/g, '');
+        
+        var isNameValid = nameVal.length >= 2;
+        var isPhoneValid = /^[6-9]\d{9}$/.test(phoneVal);
+
+        // Name Validation
+        if (!isNameValid) {
+          nameInput.classList.add('error');
+          nameError.style.display = 'block';
+        } else {
+          nameInput.classList.remove('error');
+          nameError.style.display = 'none';
+        }
+
+        // Phone Validation
+        if (!isPhoneValid) {
+          phoneInput.classList.add('error');
+          phoneError.style.display = 'block';
+        } else {
+          phoneInput.classList.remove('error');
+          phoneError.style.display = 'none';
+        }
+
+        // Form Submission Execution
+        if (isNameValid && isPhoneValid) {
+          // A. GTM DataLayer Push
+          // Initialize dataLayer safely
+          window.dataLayer = window.dataLayer || [];
+          
+          // Execute push containing campaign metadata and lead source
+          // Note: No PII (names/phone numbers) is written to dataLayer to prevent leakage
+          window.dataLayer.push({
+            event: 'consultation_form_submitted',
+            clinic_preference: 'Bengaluru',
+            lead_source: 'google_ads_landing_page'
+          });
+
+          // Console output verification for ease of debugging/reviewing
+          console.log('%c[GTM dataLayer.push Executed]', 'color: #10B981; font-weight: bold;', window.dataLayer[window.dataLayer.length - 1]);
+
+          // B. UI Update to Thank-You State
+          form.style.display = 'none';
+          document.querySelector('.form-header').style.display = 'none';
+          document.querySelector('.form-footer-note').style.display = 'none';
+          thankyouCard.style.display = 'block';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
