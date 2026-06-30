@@ -1,6 +1,6 @@
-# OrthoNow GTM Tracking Schema & Event Specification
+# OrthoNow GTM Event Tracking Schema
 
-This document defines the complete Google Tag Manager (GTM) event tracking schema for OrthoNow's digital assets. It ensures the performance marketing team has complete visibility into user behavior and conversion funnels.
+Tracking schema for Google Tag Manager (GTM) and GA4. Implement this before running any paid marketing campaigns.
 
 ## Full Event Schema Table
 
@@ -20,14 +20,14 @@ This document defines the complete Google Tag Manager (GTM) event tracking schem
 
 ## Recommended Google Ads Conversion Action
 
-### Primary Conversion Action Selection
-The **`booking_step_complete` (Step 3: Booking Confirmation)** event must be imported into Google Ads as the **Primary Conversion Action**. 
+### Primary Conversion
+The **`booking_step_complete` (Step 3: Booking Confirmation)** event must be imported into Google Ads as the **Primary Conversion Action**.
 
-### Strategic Justification
-1. **Bid Strategy Optimization**: Google Ads smart bidding strategies like **Target CPA (Cost Per Acquisition)** or **Max Conversions** require high-quality conversion signals to train the machine learning algorithm. 
-2. **Avoiding Signal Dilution**: If earlier funnel steps (like Step 1: Location Selection, or Step 2: Patient Details Entry) are used as primary conversions, the algorithm will optimize for users who merely click buttons or begin typing, rather than users who actually complete the booking. Optimizing for Step 1 would lead to budget exhaustion on low-intent clickers, diluting the lead quality.
-3. **High Intent Alignment**: Step 3 represents a user who has committed to an appointment, verified their phone number, and received a booking ID. This is the ultimate business-value event.
+### Why this event?
+1.  **Avoid optimizing for low-intent noise**: Smart bidding strategies (like Target CPA) require high-intent signals. If we optimize for Step 1 or Step 2, the algorithm gets bloated optimizing for users who just open the form or begin typing, wasting budget on non-converting clicks.
+2.  **Maximize Lead Quality**: Step 3 represents a confirmed booking with validation. This ensures we are training Google Ads to find actual patients, not just window shoppers.
 
 ### Conversion Window Configuration
-- **Recommendation**: Set the conversion window to **30 Days**.
-- **Justification**: Orthopaedic consultations are not impulsive purchases. A patient suffering from back or knee pain may click an ad, research the clinic, consult family members, and return to book 7–14 days later. A 30-day window captures this full consideration cycle without artificially cutting off late conversions, giving the Google Ads attribution model a complete picture of the path to conversion.
+-   **Recommendation**: Set the conversion window to **30 Days**.
+-   **Justification**: Orthopaedic treatment is rarely an impulse buy. Patients with back or knee pain typically research clinics, check schedules, and consult family members. The average decision cycle ranges from 1 to 2 weeks. A 30-day conversion window captures these delayed conversions, feeding accurate data back to the Google Ads attribution model.
+
