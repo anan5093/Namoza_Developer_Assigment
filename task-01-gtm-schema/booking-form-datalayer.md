@@ -1,117 +1,68 @@
-# Booking Form Funnel & dataLayer Tracking Specification
+# Booking Form - Funnel Drop-off Tracking
 
-The 3-step appointment booking form is OrthoNow’s primary conversion mechanism. Since a standard GTM setup cannot natively listen to transitions inside a single-page form, we implement a custom dataLayer-driven funnel tracking system.
+This is the part that actually needs real engineering thought, not just naming events.
 
----
+Here's the thing about a 3-step form — GTM cannot see what's happening *inside* a form on its own. It can fire something when a page loads, or when a generic click happens, but it has no native concept of "user moved from step 2 to step 3 without reloading the page." That only works if the front-end code itself tells GTM that something happened, using a dataLayer push.
 
-## Step-by-Step Funnel Specification
+So for every single step transition, the front-end developer needs to add a line of JavaScript that pushes an object into window.dataLayer at the exact moment the user completes that step. GTM is just listening for these pushes through a Custom Event trigger - it's not detecting anything on its own.
 
-### Step 1 — Location & Specialty Selection
-This step captures the patient's intent regarding which clinic location and clinical specialty they require.
+Here's what each step's push looks like:
 
-*   **GTM Trigger**: 
-    *   **Trigger Type**: Custom Event
-    *   **Event Name**: `booking_step_complete`
-    *   **Trigger Condition**: `step_number` equals `1`
-*   **Exact `dataLayer.push()` JSON**:
-    ```json
-    {
-      "event": "booking_step_complete",
-      "step_number": 1,
-      "step_name": "location_specialty_selected",
-      "clinic_location": "Koramangala, Bengaluru",
-      "specialty": "Knee & Joint"
-    }
-    ```
-*   **Abandonment Behavior**: If the user exits the page after completing Step 1 but before starting Step 2, they are categorized as **"Top-of-Funnel Drop-offs."** In GA4, we identify this group as users who fired the `booking_step_complete` event with `step_number: 1` but never fired a subsequent `step_number: 2` event in the same session.
+**Step 1 - user picks clinic and specialty**
 
----
+```json
+{
+  "event": "booking_step_complete",
+  "step_number": 1,
+  "step_name": "location_specialty_selected",
+  "clinic_location": "Koramangala, Bengaluru",
+  "specialty": "Knee and Joint"
+}
+```
 
-### Step 2 — Name / Phone / Date Entry
-In this step, the patient enters their contact information (Name, Phone) and preferred date for the appointment.
+**Step 2 - user enters their details**
 
-*   **GTM Trigger**:
-    *   **Trigger Type**: Custom Event
-    *   **Event Name**: `booking_step_complete`
-    *   **Trigger Condition**: `step_number` equals `2`
-*   **Exact `dataLayer.push()` JSON**:
-    ```json
-    {
-      "event": "booking_step_complete",
-      "step_number": 2,
-      "step_name": "patient_details_entered",
-      "preferred_date": "2025-08-15",
-      "has_phone": true
-    }
-    ```
-    *(Note: To maintain strict privacy and data compliance, we do not push Personal Identifiable Information (PII) like the actual name or phone number. We only push metadata like the preferred date and a boolean `has_phone` indicating validation success.)*
-*   **Abandonment Behavior**: If the user leaves the page here, they are flagged as **"High-Intent Drop-offs."** These users were willing to select a location and input their details but stopped short of final confirmation. They are prime targets for remarketing lists.
+I deliberately left phone and name out of this push. There's no reason to put PII into the dataLayer when all GA4 needs is confirmation the step happened.
 
----
+```json
+{
+  "event": "booking_step_complete",
+  "step_number": 2,
+  "step_name": "patient_details_entered",
+  "preferred_date": "2025-08-15",
+  "has_phone_number": true
+}
+```
 
-### Step 3 — Booking Confirmation
-This is the final step, representing a successful booking.
+**Step 3 - booking gets confirmed**
 
-*   **GTM Trigger**:
-    *   **Trigger Type**: Custom Event
-    *   **Event Name**: `booking_step_complete`
-    *   **Trigger Condition**: `step_number` equals `3`
-*   **Exact `dataLayer.push()` JSON**:
-    ```json
-    {
-      "event": "booking_step_complete",
-      "step_number": 3,
-      "step_name": "booking_confirmed",
-      "clinic_location": "Koramangala, Bengaluru",
-      "specialty": "Knee & Joint",
-      "booking_id": "ONB-20250812-004"
-    }
-    ```
-*   **Conversion Event**: This is the final conversion point. Once this event fires, it is registered in GA4 as a conversion and imported into Google Ads as our primary success metric.
+```json
+{
+  "event": "booking_step_complete",
+  "step_number": 3,
+  "step_name": "booking_confirmed",
+  "clinic_location": "Koramangala, Bengaluru",
+  "specialty": "Knee and Joint",
+  "booking_id": "ONB-20250812-004"
+}
+```
 
----
+In GTM, I'd set up one Custom Event trigger listening for the event name booking_step_complete, and then use the step_number and step_name variables to differentiate which step fired. One trigger, one tag, three different parameter sets — no need to build three separate triggers.
 
-## GA4 Funnel Exploration Setup
+### Getting this into GA4 Funnel Exploration
 
-To visualize and analyze booking drop-offs in Google Analytics 4, configure a **Funnel Exploration** report under the **Explore** tab:
+Once these three events are flowing into GA4, I'd build a Funnel Exploration with three steps, each one filtered on step_number equalling 1, 2, and 3. GA4 will then show you the percentage of users who completed step 1 but never reached step 2, and the same for step 2 to step 3. That's literally where your drop-off numbers come from — not from guessing, but from the actual step_number values in each push.
 
-1.  **Create a New Exploration**: Choose **Funnel Exploration**.
-2.  **Define the Funnel Steps**:
-    *   **Step 1: Selected Location & Specialty**
-        *   Event: `booking_step_complete`
-        *   Parameter: `step_number` = `1` (or parameter `step_name` = `location_specialty_selected`)
-    *   **Step 2: Entered Details**
-        *   Event: `booking_step_complete`
-        *   Parameter: `step_number` = `2` (or parameter `step_name` = `patient_details_entered`)
-    *   **Step 3: Confirmed Booking**
-        *   Event: `booking_step_complete`
-        *   Parameter: `step_number` = `3` (or parameter `step_name` = `booking_confirmed`)
-3.  **Identify Drop-off**:
-    *   **Step 1 → Step 2 Drop-off**: Visualized in the funnel bar chart. In the detail table, you can see the percentage of users who selected a location but did not proceed to enter their contact details.
-    *   **Step 2 → Step 3 Drop-off**: Represents users who entered details but did not complete the final confirmation. This indicates friction in the final step (e.g., trust anxiety or technical payment/confirmation lag).
-4.  **Isolate Bengaluru Clinic Traffic**:
-    *   To view this funnel specifically for Bengaluru clinic locations, apply a **Segment** or a **Filter** to the exploration.
-    *   Add a filter where the event parameter `clinic_location` **contains** `"Bengaluru"` (or matches the regex `.*Bengaluru.*`). This filters out Chennai and Hyderabad bookings, leaving only Bengaluru location data in the funnel steps.
+If I wanted to dig in further, I'd add a breakdown dimension on clinic_location inside that same funnel, so I can see if drop-off is worse for a specific clinic (maybe their slot availability shown in step 1 is bad, scaring people off before step 2).
 
----
+### Who actually writes this code
 
-## Who writes the dataLayer push?
+I want to be upfront about this because it's a common misunderstanding — GTM does not write or trigger these pushes by itself. I (or whoever owns the GTM container) can only configure tags and triggers to listen for an event name. The actual act of pushing {event: "booking_step_complete", step_number: 2, ...} into the dataLayer has to be written by the front-end developer, inside the form's JavaScript, at the exact moment step 2 finishes.
 
-### ⚠️ IMPORTANT MARTECH FACT
-**Google Tag Manager cannot natively detect step transitions inside a custom multi-step form.** GTM has no way of knowing when validation succeeds and a user moves from Step 1 to Step 2 without custom code. 
+If I were briefing the front-end team to add this for step 2 specifically, here's roughly what I'd tell them:
 
-Therefore, **the front-end developer must write and trigger the `window.dataLayer.push({...})` block in the website's application code.** GTM simply sits and listens for these pushes.
-
-### Front-End Implementation Rules
-
-Implement the custom `dataLayer.push` calls at each step transition using the following rules:
-
-1.  **Timing**: Execute `window.dataLayer.push` immediately after the transition button click (e.g., "Next", "Proceed", or "Confirm") and only after front-end validation succeeds, but prior to updating the form UI state.
-2.  **PII Restriction**: Do not include actual names, email addresses, or phone numbers in the parameters. For Step 2, send `preferred_date` formatted as `YYYY-MM-DD` and a boolean flag `has_phone: true` once the phone number passes validation.
-3.  **Payload Structure**: Follow the keys and types specified above. The event name must remain `booking_step_complete` for all three steps.
-4.  **Array Check**: Initialize the global array safely before executing the push to prevent exceptions:
-    ```javascript
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ ... });
-    ```
-
+- When the "Continue" button on step 2 is clicked and validation passes (not before validation, otherwise we'd be tracking failed attempts as successes), run a small JS function that pushes the object above into window.dataLayer
+- Make sure window.dataLayer = window.dataLayer || [] exists somewhere before this runs, in case GTM hasn't initialized yet
+- Don't put name or phone number directly in the push - just a boolean flag if needed
+- Use the same field names every time (step_number, step_name) so GTM variables stay consistent across all three steps
+- Test it by opening the browser console and typing dataLayer after clicking continue - the object should show up at the bottom of the array
