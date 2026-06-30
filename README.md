@@ -54,4 +54,4 @@ To verify that the GTM dataLayer push fires correctly, follows validation, and c
 ---
 
 ## License
-This project is proprietary and confidential. Developed for OrthoNow's digital campaign integration.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
